@@ -20,7 +20,35 @@ public class GameLogic {
      */
     public static int moveTileUpAsFarAsPossible(int[][] board, int r, int c, int minR) {
         // TODO: Fill this in in tasks 2, 3, 4
-        return 0;
+//        找到第一个0元素
+//        for (int i = 0; i < r; i++) {
+//            if (board[i][c] == 0) {
+//                board[i][c] = board[r][c];
+//                board[r][c] = 0;
+//                break;
+//            }
+//        }
+//        找到r前最后一个非0元素
+        if (r == 0 || board[r][c] == 0) {
+            return minR;
+        }
+        int count = -1;
+        for (int i = 0; i < r; i++) {
+            if (board[i][c] != 0) {
+                count = i;
+            }
+        }
+        if (count != -1 && board[count][c] == board[r][c]) {
+            board[count][c] = 2 * board[count][c];
+            board[r][c] = 0;
+            return count + 1;
+        }else if (count + 1 != r){
+            board[count + 1][c] = board[r][c];
+            board[r][c] = 0;
+            return minR;
+        }else {
+            return minR;
+        }
     }
 
     /**

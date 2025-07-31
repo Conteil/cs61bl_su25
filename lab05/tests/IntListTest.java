@@ -1,3 +1,4 @@
+import edu.princeton.cs.algs4.In;
 import org.junit.Test;
 import static com.google.common.truth.Truth.assertWithMessage;
 
@@ -153,11 +154,27 @@ public class IntListTest {
 
     @Test
     public void testCatenate() {
-        // TODO: Add tests
+        IntList a = IntList.of(0, 1, 2);
+        IntList b = IntList.of(3, 4);
+        IntList ab = IntList.of(0, 1, 2, 3, 4);
+
+        assertWithMessage("Catenated list should contain all elements").that(IntList.catenate(a, b)).isEqualTo(IntList.of(0, 1, 2, 3, 4));
+        assertWithMessage("Original list should remain unchanged after catenate").that(a).isEqualTo(IntList.of(0, 1, 2));
+        assertWithMessage("Original list should remain unchanged after catenate").that(b).isEqualTo(IntList.of(3, 4));
+        assertWithMessage("Catenating with empty list should return original list").that(IntList.catenate(a, IntList.of())).isEqualTo(IntList.of(0, 1, 2));
+        assertWithMessage("Catenating with empty list should return original list").that(IntList.catenate(IntList.of(), a)).isEqualTo(IntList.of(0, 1, 2));
     }
 
     @Test
     public void testDCatenate() {
-        // TODO: Add test
+        IntList a = IntList.of(0, 1, 2);
+        IntList b = IntList.of(3, 4);
+        IntList c = IntList.of();
+
+        assertWithMessage("dcatenated list should contain all elements").that(IntList.dcatenate(a, b)).isEqualTo(IntList.of(0, 1, 2, 3, 4));
+        assertWithMessage("List 'a' should be destructively modified to include 'b' elements").that(a).isEqualTo(IntList.of(0, 1, 2, 3, 4));
+        assertWithMessage("List 'b' should remain unchanged after dcatenate").that(b).isEqualTo(IntList.of(3, 4));
+        IntList.dcatenate(a, c);
+        assertWithMessage("dcatenate with empty list should not modify 'a'").that(a).isEqualTo(IntList.of(0, 1, 2, 3, 4));
     }
 }

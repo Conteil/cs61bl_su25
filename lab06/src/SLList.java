@@ -1,3 +1,5 @@
+import edu.princeton.cs.algs4.In;
+
 /**
  * An SLList is a list of integers, which encapsulates the
  * naked linked list structure.
@@ -114,11 +116,45 @@ public class SLList {
 
     /** Adds x to the list at the specified index. */
     public void add(int index, int x) {
-        // TODO: YOUR CODE HERE
+        IntListNode l = sentinel.next;
+        if (index == 0) {
+            this.addFirst(x);
+        } else if (index >= this.size) {
+            while (l.next != sentinel) {
+                l = l.next;
+            }
+            l.next = new IntListNode(x, sentinel);
+            this.size += 1;
+        } else {
+            for (int i = 0; i < index - 1; i++) {
+                l = l.next;
+            }
+            l.next = new IntListNode(x, l.next);
+            this.size += 1;
+        }
+    }
+
+    private static IntListNode reverseHelper(IntListNode l, IntListNode sentinel) {
+        if (l.next == sentinel) {
+            return l;
+        } else {
+            IntListNode temp = reverseHelper(l.next, sentinel);
+            IntListNode last = temp;
+            while (last.next != sentinel) {
+                last = last.next;
+            }
+            last.next = l;
+            l.next = sentinel;
+            return temp;
+        }
     }
 
     /** Destructively reverses this list. */
     public void reverse() {
-        // TODO: YOUR CODE HERE
+        if (this.size == 0) {
+            return ;
+        } else {
+            sentinel.next = reverseHelper(this.sentinel.next, this.sentinel);
+        }
     }
 }

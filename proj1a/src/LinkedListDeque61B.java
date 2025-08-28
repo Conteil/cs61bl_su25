@@ -3,13 +3,13 @@ import java.util.ArrayList; // import the ArrayList class
 
 public class LinkedListDeque61B<T> implements Deque61B<T> {
     private int size;
-    private Node<T> sentinel;
+    private Node sentinel;
 
 
-    private static class Node<T> {
+    private class Node {
         T item;
-        Node<T> prev;
-        Node<T> next;
+        Node prev;
+        Node next;
 
         public Node() {
             item = null;
@@ -25,7 +25,7 @@ public class LinkedListDeque61B<T> implements Deque61B<T> {
     }
 
     public LinkedListDeque61B() {
-        sentinel = new Node<>();
+        sentinel = new Node();
         sentinel.next = sentinel;
         sentinel.prev = sentinel;
         size = 0;
@@ -33,7 +33,7 @@ public class LinkedListDeque61B<T> implements Deque61B<T> {
 
     @Override
     public void addFirst(T x) {
-        Node<T> n = new Node<>(x, this.sentinel, this.sentinel.next);
+        Node n = new Node(x, this.sentinel, this.sentinel.next);
         this.sentinel.next = n;
         n.next.prev = n;
         size += 1;
@@ -41,7 +41,7 @@ public class LinkedListDeque61B<T> implements Deque61B<T> {
 
     @Override
     public void addLast(T x) {
-        Node<T> n = new Node<>(x, this.sentinel.prev, this.sentinel);
+        Node n = new Node(x, this.sentinel.prev, this.sentinel);
         this.sentinel.prev = n;
         n.prev.next = n;
         size += 1;
@@ -50,7 +50,7 @@ public class LinkedListDeque61B<T> implements Deque61B<T> {
     @Override
     public List<T> toList() {
         List<T> returnList = new ArrayList<>();
-        Node<T> p = this.sentinel.next;
+        Node p = this.sentinel.next;
         while (p != this.sentinel) {
             returnList.add(p.item);
             p = p.next;
@@ -99,7 +99,7 @@ public class LinkedListDeque61B<T> implements Deque61B<T> {
         if (index > size - 1) {
             return null;
         }
-        Node<T> p = this.sentinel.next;
+        Node p = this.sentinel.next;
         while (index != 0) {
             p = p.next;
             index--;
@@ -107,7 +107,7 @@ public class LinkedListDeque61B<T> implements Deque61B<T> {
         return p.item;
     }
 
-    private T getHelper(Node<T> node, int index) {
+    private T getHelper(Node node, int index) {
         if (index == 0) {
             return node.item;
         } else {

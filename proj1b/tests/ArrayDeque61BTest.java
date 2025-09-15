@@ -1,4 +1,5 @@
 import deque.ArrayDeque61B;
+import deque.Deque61B;
 
 import jh61b.utils.Reflection;
 import org.junit.jupiter.api.DisplayName;
@@ -12,14 +13,125 @@ import static com.google.common.truth.Truth.assertWithMessage;
 
 public class ArrayDeque61BTest {
 
-//     @Test
-//     @DisplayName("ArrayDeque61B has no fields besides backing array and primitives")
-//     void noNonTrivialFields() {
-//         List<Field> badFields = Reflection.getFields(ArrayDeque61B.class)
-//                 .filter(f -> !(f.getType().isPrimitive() || f.getType().equals(Object[].class) || f.isSynthetic()))
-//                 .toList();
-//
-//         assertWithMessage("Found fields that are not array or primitives").that(badFields).isEmpty();
-//     }
+    @Test
+    @DisplayName("ArrayDeque61B has no fields besides backing array and primitives")
+    void noNonTrivialFields() {
+        List<Field> badFields = Reflection.getFields(ArrayDeque61B.class)
+             .filter(f -> !(f.getType().isPrimitive() || f.getType().equals(Object[].class) || f.isSynthetic()))
+             .toList();
 
+        assertWithMessage("Found fields that are not array or primitives").that(badFields).isEmpty();
+    }
+
+    @Test
+    public void getTest() {
+        ArrayDeque61B<String> array = new ArrayDeque61B<>();
+        assertThat(array.get(-1)).isEqualTo(null);
+        assertThat(array.get(9)).isEqualTo(null);
+        assertThat(array.get(3)).isEqualTo(null);
+        array.addLast("a");
+        assertThat(array.get(0)).isEqualTo("a");
+        array.addLast("b");
+        array.addFirst("c");
+        assertThat(array.get(1)).isEqualTo("a");
+        array.addLast("d");
+        array.addLast("e");
+        array.addFirst("f");
+        assertThat(array.get(0)).isEqualTo("f");
+        assertThat(array.get(4)).isEqualTo("d");
+    }
+
+    @Test
+    public void toListTest() {
+        ArrayDeque61B<String> array = new ArrayDeque61B<>();
+        assertThat(array.toList()).containsExactly();
+        array.addLast("a");
+        assertThat(array.toList()).containsExactly("a").inOrder();
+        array.addLast("b");
+        array.addFirst("c");
+        assertThat(array.toList()).containsExactly("c", "a", "b").inOrder();
+        array.addLast("d");
+        array.addLast("e");
+        array.addFirst("f");
+        assertThat(array.toList()).containsExactly("f", "c", "a", "b", "d", "e").inOrder();
+        array.addLast("g");
+        array.addLast("h");
+        array.addLast("Z");
+        assertThat(array.toList()).containsExactly("f", "c", "a", "b", "d", "e", "g", "h", "Z").inOrder();
+        }
+
+    @Test
+    public void removeFirst() {
+        ArrayDeque61B<String> array = new ArrayDeque61B<>();
+        array.addLast("a");
+        array.addLast("b");
+        array.addFirst("c");
+        assertThat(array.removeFirst()).isEqualTo("c");
+        assertThat(array.toList()).containsExactly("a", "b").inOrder();
+        assertThat(array.removeFirst()).isEqualTo("a");
+        assertThat(array.toList()).containsExactly("b").inOrder();
+        assertThat(array.removeFirst()).isEqualTo("b");
+        array.addLast("a");
+        array.addLast("b");
+        array.addFirst("c");
+        assertThat(array.removeLast()).isEqualTo("b");
+        assertThat(array.toList()).containsExactly("c", "a").inOrder();
+        assertThat(array.removeLast()).isEqualTo("a");
+        assertThat(array.toList()).containsExactly("c").inOrder();
+        assertThat(array.removeLast()).isEqualTo("c");
+        array.addLast("b");
+        for (int i = 0; i < 30; i++) {
+            array.addLast("n");
+        }
+        for (int i = 0; i < 29; i++) {
+            array.removeLast();
+        }
+        assertThat(array.removeLast()).isEqualTo("n");
+        assertThat(array.removeLast()).isEqualTo("b");
+    }
+
+    @Test
+    public void addLastTestBasicWithoutToList() {
+        Deque61B<String> lld1 = new ArrayDeque61B<>();
+        assertThat(lld1).containsExactly();
+        lld1.addLast("front"); // after this call we expect: ["front"]
+        lld1.addLast("middle"); // after this call we expect: ["front", "middle"]
+        lld1.addLast("back"); // after this call we expect: ["front", "middle", "back"]
+        assertThat(lld1).containsExactly("front", "middle", "back").inOrder();
+    }
+
+    @Test
+    public void testEqualDeque61B() {
+        Deque61B<String> lld1 = new ArrayDeque61B<>();
+        Deque61B<String> lld2 = new ArrayDeque61B<>();
+        Deque61B<String> lld3 = new ArrayDeque61B<>();
+        String str = "front";
+
+        lld1.addLast("front");
+        lld1.addLast("middle");
+        lld1.addLast("back");
+
+        lld2.addLast("front");
+        lld2.addLast("middle");
+        lld2.addLast("back");
+
+        lld3.addLast("front");
+        lld3.addLast("middle");
+
+        assertThat(lld1).isEqualTo(lld2);
+        assertThat(lld1).isNotEqualTo(str);
+        assertThat(lld1).isNotEqualTo(lld3);
+
+        lld3.addLast("none");
+        assertThat(lld1).isNotEqualTo(lld3);
+    }
+
+    @Test
+    public void toStringTest() {
+        Deque61B<String> lld1 = new ArrayDeque61B<>();
+        lld1.addLast("front"); // after this call we expect: ["front"]
+        lld1.addLast("middle"); // after this call we expect: ["front", "middle"]
+        lld1.addLast("back"); // after this call we expect: ["front", "middle", "back"]
+        assertThat(lld1.toString()).isEqualTo("[front, middle, back]");
+    }
 }

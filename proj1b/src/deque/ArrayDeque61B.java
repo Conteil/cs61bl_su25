@@ -90,11 +90,11 @@ public class ArrayDeque61B<T> implements Deque61B<T> {
         if (size == 0) {
             return null;
         } else {
-        T item = get(0);
-        nextFirst++;
-        size--;
-        array = resizeDown();
-        return item;
+            T item = get(0);
+            nextFirst++;
+            size--;
+            array = resizeDown();
+            return item;
         }
     }
 
@@ -151,12 +151,12 @@ public class ArrayDeque61B<T> implements Deque61B<T> {
 
     @Override
     public boolean equals(Object o) {
-        if (o instanceof ArrayDeque61B<?> other) {
-            if (other.size != size) {
+        if (o instanceof Deque61B<?> other) {
+            if (other.size() != size) {
                 return false;
             } else {
                 for (int i = 0; i < size; i++) {
-                    if (other.get(i) != get(i)) {
+                    if (!other.get(i).equals(get(i))) {
                         return false;
                     }
                 }

@@ -1,6 +1,7 @@
 import deque.ArrayDeque61B;
 import deque.Deque61B;
 
+import deque.LinkedListDeque61B;
 import jh61b.utils.Reflection;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -142,6 +143,8 @@ public class ArrayDeque61BTest {
         Deque61B<String> lld1 = new ArrayDeque61B<>();
         Deque61B<String> lld2 = new ArrayDeque61B<>();
         Deque61B<String> lld3 = new ArrayDeque61B<>();
+        Deque61B<String> lld4 = new LinkedListDeque61B<>();
+
         String str = "front";
 
         lld1.addLast("front");
@@ -155,9 +158,15 @@ public class ArrayDeque61BTest {
         lld3.addLast("front");
         lld3.addLast("middle");
 
+        lld4.addLast("front");
+        lld4.addLast("middle");
+        lld4.addLast("back");
+
         assertThat(lld1).isEqualTo(lld2);
         assertThat(lld1).isNotEqualTo(str);
         assertThat(lld1).isNotEqualTo(lld3);
+        assertThat(lld4).isEqualTo(lld1);
+        assertThat(lld1).isEqualTo(lld4);
 
         lld3.addLast("none");
         assertThat(lld1).isNotEqualTo(lld3);

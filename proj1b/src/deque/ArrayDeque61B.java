@@ -49,7 +49,7 @@ public class ArrayDeque61B<T> implements Deque61B<T> {
 
     @Override
     public List<T> toList() {
-        List returnList = new ArrayList<>();
+        List<T> returnList = new ArrayList<>();
         for (int i = 0; i < size; i++) {
             returnList.add(get(i));
         }
@@ -72,7 +72,7 @@ public class ArrayDeque61B<T> implements Deque61B<T> {
             return array;
         } else {
             int newLen = array.length / 2;
-            while (size / newLen <= 0.25 && newLen > USAGE_THRESHOLD) {
+            while ((float) size / newLen <= 0.25 && newLen > USAGE_THRESHOLD) {
                 newLen /= 2;
             }
             T[] newArray = (T[]) new Object[newLen];
@@ -113,7 +113,7 @@ public class ArrayDeque61B<T> implements Deque61B<T> {
 
     @Override
     public T get(int index) {
-        if (index >= array.length || index < 0) {
+        if (index >= size || index < 0) {
             return null;
         } else {
             return array[Math.floorMod(nextFirst + index + 1, array.length)];

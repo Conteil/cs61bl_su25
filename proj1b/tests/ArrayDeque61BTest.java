@@ -39,6 +39,13 @@ public class ArrayDeque61BTest {
         array.addFirst("f");
         assertThat(array.get(0)).isEqualTo("f");
         assertThat(array.get(4)).isEqualTo("d");
+        array.addLast("g");
+        array.addLast("h");
+        array.addLast("Z");
+        array.addFirst("m");
+        assertThat(array.get(1)).isEqualTo("f");
+        assertThat(array.get(0)).isEqualTo("m");
+        assertThat(array.get(9)).isEqualTo("Z");
     }
 
     @Test

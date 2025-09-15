@@ -87,20 +87,28 @@ public class ArrayDeque61B<T> implements Deque61B<T> {
 
     @Override
     public T removeFirst() {
+        if (size == 0) {
+            return null;
+        } else {
         T item = get(0);
         nextFirst++;
         size--;
         array = resizeDown();
         return item;
+        }
     }
 
     @Override
     public T removeLast() {
-        T item = get(size - 1);
-        nextLast--;
-        size--;
-        array = resizeDown();
-        return item;
+        if (size == 0) {
+            return null;
+        } else {
+            T item = get(size - 1);
+            nextLast--;
+            size--;
+            array = resizeDown();
+            return item;
+        }
     }
 
     @Override

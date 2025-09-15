@@ -64,6 +64,9 @@ public class ArrayDeque61BTest {
     public void removeFirst() {
         ArrayDeque61B<String> array = new ArrayDeque61B<>();
         assertThat(array.size()).isEqualTo(0);
+        array.removeFirst();
+        assertThat(array.size()).isEqualTo(0);
+        
         array.addLast("a");
         array.addLast("b");
         array.addFirst("c");
@@ -103,6 +106,7 @@ public class ArrayDeque61BTest {
         assertThat(array2.removeFirst()).isEqualTo("n");
         assertThat(array2.removeFirst()).isEqualTo("b");
         assertThat(array2.toList()).containsExactly();
+        assertThat(array2.size()).isEqualTo(0);
         array2.addFirst("n");
         assertThat(array2.size()).isEqualTo(1);
         assertThat(array2.toList()).containsExactly("n");

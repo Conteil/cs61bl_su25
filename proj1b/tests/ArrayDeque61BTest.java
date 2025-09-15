@@ -63,6 +63,7 @@ public class ArrayDeque61BTest {
     @Test
     public void removeFirst() {
         ArrayDeque61B<String> array = new ArrayDeque61B<>();
+        assertThat(array.size()).isEqualTo(0);
         array.addLast("a");
         array.addLast("b");
         array.addFirst("c");
@@ -80,6 +81,7 @@ public class ArrayDeque61BTest {
         assertThat(array.toList()).containsExactly("c").inOrder();
         assertThat(array.removeLast()).isEqualTo("c");
         array.addLast("b");
+        assertThat(array.size()).isEqualTo(1);
         for (int i = 0; i < 30; i++) {
             array.addLast("n");
         }
@@ -88,6 +90,30 @@ public class ArrayDeque61BTest {
         }
         assertThat(array.removeLast()).isEqualTo("n");
         assertThat(array.removeLast()).isEqualTo("b");
+
+        ArrayDeque61B<String> array2 = new ArrayDeque61B<>();
+        array2.addFirst("b");
+        assertThat(array2.size()).isEqualTo(1);
+        for (int i = 0; i < 30; i++) {
+            array2.addFirst("n");
+        }
+        for (int i = 0; i < 29; i++) {
+            array2.removeFirst();
+        }
+        assertThat(array2.removeFirst()).isEqualTo("n");
+        assertThat(array2.removeFirst()).isEqualTo("b");
+        assertThat(array2.toList()).containsExactly();
+        array2.addFirst("n");
+        assertThat(array2.size()).isEqualTo(1);
+        assertThat(array2.toList()).containsExactly("n");
+    }
+
+    @Test
+    public void isEmptyTest() {
+        Deque61B<String> array = new ArrayDeque61B<>();
+        assertThat(array.isEmpty()).isEqualTo(true);
+        array.addLast("n");
+        assertThat(array.isEmpty()).isEqualTo(false);
     }
 
     @Test

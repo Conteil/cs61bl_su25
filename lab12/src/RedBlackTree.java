@@ -46,11 +46,17 @@ public class RedBlackTree<T extends Comparable<T>> {
         }
 
         if (r.getItemCount() == 1) {
-            // TODO: Replace with code to create a 2-node equivalent
-            return null;
+            RBTreeNode<T> rbTreeRoot = new RBTreeNode<>(true, r.getItemAt(0));
+            rbTreeRoot.left = buildRedBlackTree(r.getChildAt(0));
+            rbTreeRoot.right = buildRedBlackTree(r.getChildAt(1));
+            return rbTreeRoot;
         } else {
-            // TODO: Replace with code to create a 3-node equivalent
-            return null;
+            RBTreeNode<T> rbTreeRoot = new RBTreeNode<>(true, r.getItemAt(1));
+            rbTreeRoot.left = new RBTreeNode<>(false, r.getItemAt(0));
+            rbTreeRoot.left.left = buildRedBlackTree(r.getChildAt(0));
+            rbTreeRoot.left.right = buildRedBlackTree(r.getChildAt(1));
+            rbTreeRoot.right = buildRedBlackTree(r.getChildAt(2));
+            return rbTreeRoot;
         }
     }
 
@@ -60,7 +66,9 @@ public class RedBlackTree<T extends Comparable<T>> {
      * @param node
      */
     void flipColors(RBTreeNode<T> node) {
-        // TODO: YOUR CODE HERE
+        node.isBlack = !node.isBlack;
+        node.left.isBlack = !node.left.isBlack;
+        node.right.isBlack = !node.right.isBlack;
     }
 
     /**
@@ -71,8 +79,12 @@ public class RedBlackTree<T extends Comparable<T>> {
      * @return
      */
     RBTreeNode<T> rotateRight(RBTreeNode<T> node) {
-        // TODO: YOUR CODE HERE
-        return null;
+        RBTreeNode<T> returnNode = new RBTreeNode<>(node.isBlack, node.left.item);
+        returnNode.right = new RBTreeNode<>(node.left.isBlack, node.item);
+        returnNode.right.right = node.right;
+        returnNode.right.left = node.left.right;
+        returnNode.left = node.left.left;
+        return returnNode;
     }
 
     /**
@@ -83,8 +95,12 @@ public class RedBlackTree<T extends Comparable<T>> {
      * @return
      */
     RBTreeNode<T> rotateLeft(RBTreeNode<T> node) {
-        // TODO: YOUR CODE HERE
-        return null;
+        RBTreeNode<T> returnNode = new RBTreeNode<>(node.isBlack, node.right.item);
+        returnNode.left = new RBTreeNode<>(node.right.isBlack, node.item);
+        returnNode.left.left = node.left;
+        returnNode.left.right = node.right.left;
+        returnNode.right = node.right.right;
+        return returnNode;
     }
 
     /**
@@ -105,23 +121,20 @@ public class RedBlackTree<T extends Comparable<T>> {
      * @return
      */
     private RBTreeNode<T> insert(RBTreeNode<T> node, T item) {
-        // TODO: Insert (return) new red leaf node.
-
-
-        // TODO: Handle normal binary search tree insertion. The below line may help.
-        int comp = item.compareTo(node.item);
-
-
-        // TODO: Rotate left operation (handle "middle of three" and "right-leaning red" structures)
-
-
-        // TODO: Rotate right operation (handle "smallest of three" structure)
-
-
-        // TODO: Color flip (handle "largest of three" structure)
-
-
-        return null; // TODO: fix this return statement
+        // Insert (return) new red leaf node.
+        // Handle normal binary search tree insertion.
+        if (node == null) {
+            return new RBTreeNode<T>(false, item);
+        } else {
+            int comp = item.compareTo(node.item);
+            if (comp > 0) {
+                node.right = insert(node.right, item);
+            } else {
+                node.left = insert(node.left, item);
+            }
+            // fix this return statement
+            return checkHelper(node);
+        }
     }
 
     /**
@@ -134,4 +147,19 @@ public class RedBlackTree<T extends Comparable<T>> {
         return node != null && !node.isBlack;
     }
 
+    private RBTreeNode checkHelper(RBTreeNode<T> node) {
+        if (isRed(node.right) && !isRed(node.left)) {
+            // Rotate left operation (handle "middle of three" and "right-leaning red" structures)
+            return rotateLeft(node);
+        } else if (isRed(node.left) && isRed(node.right)) {
+            // Color flip (handle "largest of three" structure)
+            flipColors(node);
+            return node;
+        } else if (isRed(node.left) && isRed(node.left.left)) {
+            // Rotate right operation (handle "smallest of three" structure)
+            return checkHelper(rotateRight(node));
+        } else {
+            return node;
+        }
+    }
 }

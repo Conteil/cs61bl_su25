@@ -1,4 +1,6 @@
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.NoSuchElementException;
 
 /* A MinHeap class of Comparable elements backed by an ArrayList. */
 public class MinHeap<E extends Comparable<E>> {
@@ -6,7 +8,7 @@ public class MinHeap<E extends Comparable<E>> {
     /* An ArrayList that stores the elements in this MinHeap. */
     private ArrayList<E> contents;
     private int size;
-    // TODO: YOUR CODE HERE (no code should be needed here if not implementing the more optimized version)
+    HashMap<E, Integer> map = new HashMap<>();
 
     /* Initializes an empty MinHeap. */
     public MinHeap() {
@@ -30,6 +32,7 @@ public class MinHeap<E extends Comparable<E>> {
             contents.add(null);
         }
         contents.set(index, element);
+        map.put(element, index);
     }
 
     /* Swaps the elements at the two indices. */
@@ -69,61 +72,94 @@ public class MinHeap<E extends Comparable<E>> {
 
     /* Returns the index of the left child of the element at index INDEX. */
     private int getLeftOf(int index) {
-        // TODO: YOUR CODE HERE
-        return -1;
+        return index * 2 <= size ? index * 2 : 0;
     }
 
     /* Returns the index of the right child of the element at index INDEX. */
     private int getRightOf(int index) {
-        // TODO: YOUR CODE HERE
-        return -1;
+        return index * 2 + 1 <= size ? index * 2 + 1 : 0;
     }
 
     /* Returns the index of the parent of the element at index INDEX. */
     private int getParentOf(int index) {
-        // TODO: YOUR CODE HERE
-        return -1;
+        return index / 2;
     }
 
     /* Returns the index of the smaller element. At least one index has a
        non-null element. If the elements are equal, return either index. */
     private int min(int index1, int index2) {
-        // TODO: YOUR CODE HERE
-        return -1;
+        if (getElement(index1) == null) {
+            return index2;
+        } else if (getElement(index2) == null) {
+            return index1;
+        } else if (getElement(index1).compareTo(getElement(index2)) <= 0) {
+            return index1;
+        } else {
+            return index2;
+        }
     }
 
     /* Returns but does not remove the smallest element in the MinHeap. */
     public E findMin() {
-        // TODO: YOUR CODE HERE
-        return null;
+        return getElement(1);
     }
 
     /* Bubbles up the element currently at index INDEX. */
     private void bubbleUp(int index) {
-        // TODO: YOUR CODE HERE
+        int parent;
+        while (index != 1 && min(getParentOf(index), index) == index) {
+            parent = getParentOf(index);
+            swap(index, parent);
+            index = parent;
+         }
     }
 
     /* Bubbles down the element currently at index INDEX. */
     private void bubbleDown(int index) {
-        // TODO: YOUR CODE HERE
+        while (getElement(getLeftOf(index)) != null) {
+            int leftChild = getLeftOf(index);
+            int rightChild = getRightOf(index);
+            int minChild = min(leftChild, rightChild);
+            if (min(minChild, index) == minChild) {
+                swap(minChild, index);
+                bubbleDown(minChild);
+            } else {
+                break;
+            }
+        }
     }
 
     /* Returns the number of elements in the MinHeap. */
     public int size() {
-        // TODO: YOUR CODE HERE
-        return 0;
+        return size;
     }
 
     /* Inserts ELEMENT into the MinHeap. If ELEMENT is already in the MinHeap,
        throw an IllegalArgumentException.*/
     public void insert(E element) {
-        // TODO: YOUR CODE HERE
+        if (contains(element)) {
+            throw new IllegalArgumentException();
+        } else {
+            size++;
+            setElement(size, element);
+            map.put(element, size);
+            bubbleUp(size);
+        }
     }
 
     /* Returns and removes the smallest element in the MinHeap, or null if there are none. */
     public E removeMin() {
-        // TODO: YOUR CODE HERE
-        return null;
+        E min = findMin();
+        if (min == null) {
+            return null;
+        } else {
+            swap(size, 1);
+            contents.remove(size);
+            size--;
+            map.remove(min);
+            bubbleDown(1);
+            return min;
+        }
     }
 
     /* Replaces and updates the position of ELEMENT inside the MinHeap, which
@@ -131,18 +167,19 @@ public class MinHeap<E extends Comparable<E>> {
        not exist in the MinHeap, throw a NoSuchElementException. Item equality
        should be checked using .equals(), not ==. */
     public void update(E element) {
-        // TODO: OPTIONAL
+        if (!contains(element)) {
+            throw new NoSuchElementException();
+        } else {
+            int index = map.get(element);
+            setElement(index, element);
+            bubbleUp(index);
+            bubbleDown(index);
+        }
     }
 
     /* Returns true if ELEMENT is contained in the MinHeap. Item equality should
        be checked using .equals(), not ==. */
     public boolean contains(E element) {
-        // OPTIONAL: OPTIMIZE THE SPEED OF THIS TO MAKE IT CONSTANT
-        for (int i = 1; i < contents.size(); i++) {
-            if (element.equals(contents.get(i))) {
-                return true;
-            }
-        }
-        return false;
+        return map.containsKey(element);
     }
 }

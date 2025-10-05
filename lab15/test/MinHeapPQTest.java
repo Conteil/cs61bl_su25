@@ -37,9 +37,22 @@ public class MinHeapPQTest {
         assertThat(0).isEqualTo(pq.size());
     }
 
-    // TODO: add some of your own tests here!
-
     @Test
     public void test1() {
+        MinHeapPQ<String> pq = new MinHeapPQ<>();
+        pq.insert("l", 2);
+        pq.insert("h", 100);
+        pq.insert("i", 0);
+        assertThat(pq.contains("l")).isEqualTo(true);
+        assertThat(pq.contains("a")).isEqualTo(false);
+        pq.changePriority("h", -1);
+        pq.changePriority("i", 3);
+        assertThat(pq.peek()).isEqualTo("h");
+        assertThat(pq.contains("h")).isEqualTo(true);
+        assertThat(pq.poll()).isEqualTo("h");
+        assertThat(pq.contains("h")).isEqualTo(false);
+        assertThat(pq.size()).isEqualTo(2);
+        assertThat(pq.poll()).isEqualTo("l");
+        assertThat(pq.poll()).isEqualTo("i");
     }
 }

@@ -30,44 +30,109 @@ public class Graph {
        Edge already exists, replaces the current Edge with a new Edge with
        weight WEIGHT. */
     public void addEdge(int v1, int v2, int weight) {
-        // TODO: YOUR CODE HERE
+        for (Edge e: adjLists[v1]) {
+            if (e.to == v2) {
+                e.weight = weight;
+                return;
+            }
+        }
+
+        adjLists[v1].addLast(new Edge(v1, v2, weight));
     }
 
     /* Adds an undirected Edge (V1, V2) to the graph with weight WEIGHT. If the
        Edge already exists, replaces the current Edge with a new Edge with
        weight WEIGHT. */
     public void addUndirectedEdge(int v1, int v2, int weight) {
-        // TODO: YOUR CODE HERE
+        addEdge(v1, v2, weight);
+        addEdge(v2, v1, weight);
     }
 
     /* Returns true if there exists an Edge from vertex FROM to vertex TO.
        Returns false otherwise. */
     public boolean isAdjacent(int from, int to) {
-        // TODO: YOUR CODE HERE
+        for (Edge e: adjLists[from]) {
+            if (e.to == to) {
+                return true;
+            }
+        }
+
         return false;
     }
 
     /* Returns a list of all the vertices u such that the Edge (V, u)
        exists in the graph. */
     public List<Integer> neighbors(int v) {
-        // TODO: YOUR CODE HERE
-        return null;
+        List<Integer> neighbors = new ArrayList<>();
+        for (Edge e: adjLists[v]) {
+            neighbors.add(e.to);
+        }
+        return neighbors;
     }
     /* Returns the number of incoming Edges for vertex V. */
     public int inDegree(int v) {
-        // TODO: YOUR CODE HERE
-        return 0;
+        int inDegree = 0;
+        for (int i = 0; i < adjLists.length; i++) {
+            if (isAdjacent(i, v)) {
+                inDegree++;
+            }
+        }
+        return inDegree;
     }
 
     /* Returns a list of the vertices that lie on the shortest path from start to stop. 
     If no such path exists, you should return an empty list. If START == STOP, returns a List with START. */
     public ArrayList<Integer> shortestPath(int start, int stop) {
-        // TODO: YOUR CODE HERE
-        return null;
+        ArrayList<Integer> path = new ArrayList<>();
+
+        int[] distTo = new int[adjLists.length];
+        int[] edgeTo = new int[adjLists.length];
+        boolean[] visited = new boolean[adjLists.length];
+        PriorityQueue<distance> fringe = new PriorityQueue<>();
+        for (int i = 0; i < adjLists.length; i++) {
+            distTo[i] = -1;
+            edgeTo[i] = -1;
+        }
+
+        fringe.add(new distance(start, 0));
+        distTo[start] = 0;
+        edgeTo[start] = start;
+
+        while(!visited[stop]) {
+            distance curr = fringe.poll();
+
+            int currNode = curr.getKey();
+            int currDist = curr.getValue();
+            visited[currNode] = true;
+
+            for (Edge e: adjLists[currNode]) {
+                if (visited[e.to]) {
+                    continue;
+                }
+
+                if (distTo[e.to] == -1 || currDist + e.weight < distTo[e.to]) {
+                    distTo[e.to] = currDist + e.weight;
+                    edgeTo[e.to] = currNode;
+                    fringe.add(new distance(e.to, distTo[e.to]));
+                }
+            }
+        }
+
+        if (edgeTo[stop] != -1) {
+            for (int curr = stop; curr != start; curr = edgeTo[curr]) {
+                path.add(0, curr);
+            }
+            path.add(0, start);
+        }
+        return path;
     }
 
     private Edge getEdge(int v1, int v2) {
-        // TODO: YOUR CODE HERE
+        for (Edge e: adjLists[v1]) {
+            if (e.to == v2) {
+                return e;
+            }
+        }
         return null;
     }
 
@@ -93,5 +158,49 @@ public class Graph {
 
     }
 
-    
+    private class distance implements Map.Entry<Integer, Integer>, Comparable<distance> {
+        private int node;
+        private int dist;
+
+        distance(int node, int dist) {
+            this.node = node;
+            this.dist = dist;
+        }
+
+        @Override
+        public Integer getKey() {
+            return node;
+        }
+
+        @Override
+        public Integer getValue() {
+            return dist;
+        }
+
+        @Override
+        public Integer setValue(Integer dist) {
+            int oldDist = this.dist;
+            this.dist = dist;
+            return oldDist;
+        }
+
+        @Override
+        public int compareTo(distance o) {
+            return this.dist - o.dist;
+        }
+    }
+
+
+    public static void main(String[] args) {
+        Graph g = new Graph(5);
+        g.addEdge(0, 1, 10);
+        g.addEdge(0, 3, 30);
+        g.addEdge(0, 4, 100);
+        g.addEdge(1, 2, 50);
+        g.addEdge(2, 4, 10);
+        g.addEdge(3, 4, 60);
+        g.addEdge(3, 2, 20);
+        ArrayList<Integer> path0 = g.shortestPath(0, 1);
+        System.out.println(path0);
+    }
 }

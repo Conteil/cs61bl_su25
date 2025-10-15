@@ -80,7 +80,7 @@ public class Graph {
         return inDegree;
     }
 
-    /* Returns a list of the vertices that lie on the shortest path from start to stop. 
+    /* Returns a list of the vertices that lie on the shortest path from start to stop.
     If no such path exists, you should return an empty list. If START == STOP, returns a List with START. */
     public ArrayList<Integer> shortestPath(int start, int stop) {
         ArrayList<Integer> path = new ArrayList<>();
@@ -88,21 +88,23 @@ public class Graph {
         int[] distTo = new int[adjLists.length];
         int[] edgeTo = new int[adjLists.length];
         boolean[] visited = new boolean[adjLists.length];
-        PriorityQueue<distance> fringe = new PriorityQueue<>();
+        PriorityQueue<Edge> fringe = new PriorityQueue<>(adjLists.length, new EdgeComparator());
         for (int i = 0; i < adjLists.length; i++) {
-            distTo[i] = -1;
+            distTo[i] = Integer.MAX_VALUE;
             edgeTo[i] = -1;
         }
 
-        fringe.add(new distance(start, 0));
+        fringe.add(new Edge(-1, start, 0));
         distTo[start] = 0;
-        edgeTo[start] = start;
 
         while(!visited[stop]) {
-            distance curr = fringe.poll();
+            Edge curr = fringe.poll();
+            int currNode = curr.to;
 
-            int currNode = curr.getKey();
-            int currDist = curr.getValue();
+            if (visited[currNode] == true) {
+                continue;
+            }
+
             visited[currNode] = true;
 
             for (Edge e: adjLists[currNode]) {
@@ -110,10 +112,10 @@ public class Graph {
                     continue;
                 }
 
-                if (distTo[e.to] == -1 || currDist + e.weight < distTo[e.to]) {
-                    distTo[e.to] = currDist + e.weight;
+                if (distTo[currNode] + e.weight < distTo[e.to]) {
+                    distTo[e.to] = distTo[currNode] + e.weight;
                     edgeTo[e.to] = currNode;
-                    fringe.add(new distance(e.to, distTo[e.to]));
+                    fringe.add(new Edge(currNode, e.to, distTo[e.to]));
                 }
             }
         }
@@ -134,6 +136,14 @@ public class Graph {
             }
         }
         return null;
+    }
+
+    private class EdgeComparator implements Comparator<Edge> {
+
+        @Override
+        public int compare(Edge o1, Edge o2) {
+            return o1.weight - o2.weight;
+        }
     }
 
     private class Edge {
@@ -157,39 +167,6 @@ public class Graph {
         }
 
     }
-
-    private class distance implements Map.Entry<Integer, Integer>, Comparable<distance> {
-        private int node;
-        private int dist;
-
-        distance(int node, int dist) {
-            this.node = node;
-            this.dist = dist;
-        }
-
-        @Override
-        public Integer getKey() {
-            return node;
-        }
-
-        @Override
-        public Integer getValue() {
-            return dist;
-        }
-
-        @Override
-        public Integer setValue(Integer dist) {
-            int oldDist = this.dist;
-            this.dist = dist;
-            return oldDist;
-        }
-
-        @Override
-        public int compareTo(distance o) {
-            return this.dist - o.dist;
-        }
-    }
-
 
     public static void main(String[] args) {
         Graph g = new Graph(5);

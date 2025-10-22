@@ -48,6 +48,40 @@ public class TestMultiWordK0Hyponyms {
         assertThat(actual).isEqualTo(expected);
     }
 
-    // TODO: Add more unit tests (including edge case tests) here.
+    @Test
+    public void testSharingWordsK0() {
+        NgordnetQueryHandler studentHandler = AutograderBuddy.getHyponymsHandler(
+                WORDS_FILE, TOTAL_COUNTS_FILE, LARGE_SYNSET_FILE, LARGE_HYPONYM_FILE);
+        List<String> words = new ArrayList<>();
+        words.add("video");
+        words.add("recording");
 
+        NgordnetQuery nq = new NgordnetQuery(words, 0, 0, 0);
+        String actual = studentHandler.handle(nq);
+        String expected = "[video, video_recording, videocassette, videotape]";
+        assertThat(actual).isEqualTo(expected);
+
+        List<String> words2 = new ArrayList<>();
+        words2.add("pastry");
+        words2.add("tart");
+
+        NgordnetQuery nq2 = new NgordnetQuery(words2, 0, 0, 0);
+        String actual2 = studentHandler.handle(nq2);
+        String expected2 = "[apple_tart, lobster_tart, quiche, quiche_Lorraine, tart, tartlet]";
+        assertThat(actual2).isEqualTo(expected2);
+    }
+
+    @Test
+    public void testWords() {
+        NgordnetQueryHandler studentHandler = AutograderBuddy.getHyponymsHandler(
+                SMALL_WORDS_FILE, TOTAL_COUNTS_FILE, LARGE_SYNSET_FILE, LARGE_HYPONYM_FILE);
+        List<String> words = new ArrayList<>();
+        words.add("food");
+        words.add("cake");
+
+        NgordnetQuery nq = new NgordnetQuery(words, 1950, 1990, 5);
+        String actual = studentHandler.handle(nq);
+        String expected = "[cake, cookie, kiss, snap, wafer]";
+        assertThat(actual).isEqualTo(expected);
+    }
 }

@@ -2,8 +2,11 @@ import browser.NgordnetQuery;
 import browser.NgordnetQueryHandler;
 import org.junit.jupiter.api.Test;
 import main.AutograderBuddy;
+import wordnet.WordnetGraph;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 
 import static com.google.common.truth.Truth.assertThat;
@@ -26,9 +29,57 @@ public class TestOneWordK0Hyponyms {
     private static final String SYNSETS_FILE_SUBSET = "data/wordnet/synsets1000-subgraph.txt";
 
     // EECS files
-    private static final String FREQUENCY_EECS_FILE = "data/ngrams/frequency-EECS.csv";
-    private static final String HYPONYMS_EECS_FILE = "data/wordnet/hyponyms-EECS.txt";
-    private static final String SYNSETS_EECS_FILE = "data/wordnet/synsets-EECS.txt";
+//    private static final String FREQUENCY_EECS_FILE = "data/ngrams/frequency-EECS.csv";
+//    private static final String HYPONYMS_EECS_FILE = "data/wordnet/hyponyms-EECS.txt";
+//    private static final String SYNSETS_EECS_FILE = "data/wordnet/synsets-EECS.txt";
+
+
+    @Test
+    public void testGraph() {
+//        WordnetGraph wn = new WordnetGraph(SMALL_SYNSET_FILE, SMALL_HYPONYM_FILE);
+//        // public WordnetGraph.wordnet to test
+//
+//        LinkedList<Integer> test1 = new LinkedList<>();
+//        test1.add(9);
+//        test1.add(10);
+//        assertThat(wn.wordnet.neighbors(8)).isEqualTo(test1);
+//
+//        LinkedList<Integer> test2 = new LinkedList<>();
+//        test2.add(12);
+//        test2.add(13);
+//        assertThat(wn.wordnet.neighbors(11)).isEqualTo(test2);
+//
+//        assertThat(wn.indexWords(6)).isEqualTo(new String[]{"act", "human_action", "human_activity"});
+//
+//        HashSet<Integer> test3 = new HashSet<>();
+//        test3.add(6);
+//        test3.add(7);
+//        test3.add(8);
+//        test3.add(9);
+//        test3.add(10);
+//        assertThat(wn.wordnet.traversal(6)).isEqualTo(test3);
+    }
+
+    @Test
+    public void testSmallActK0() {
+        NgordnetQueryHandler studentHandler = AutograderBuddy.getHyponymsHandler(
+                SMALL_WORDS_FILE, TOTAL_COUNTS_FILE, SMALL_SYNSET_FILE, SMALL_HYPONYM_FILE);
+        List<String> words = new ArrayList<>();
+        words.add("act");
+
+        NgordnetQuery nq = new NgordnetQuery(words, 0, 0, 0);
+        String actual = studentHandler.handle(nq);
+        String expected = "[act, action, change, demotion, human_action, human_activity, variation]";
+        assertThat(actual).isEqualTo(expected);
+
+        List<String> words2 = new ArrayList<>();
+        words2.add("change");
+
+        NgordnetQuery nq2 = new NgordnetQuery(words2, 0, 0, 0);
+        String actual2 = studentHandler.handle(nq2);
+        String expected2 = "[alteration, change, demotion, increase, jump, leap, modification, saltation, transition, variation]";
+        assertThat(actual2).isEqualTo(expected2);
+    }
 
     @Test
     public void testActK0() {
@@ -42,6 +93,4 @@ public class TestOneWordK0Hyponyms {
         String expected = "[act, action, change, demotion, human_action, human_activity, variation]";
         assertThat(actual).isEqualTo(expected);
     }
-
-    // TODO: Add more unit tests (including edge case tests) here.
 }

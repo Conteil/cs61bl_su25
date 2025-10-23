@@ -93,4 +93,20 @@ public class TestOneWordK0Hyponyms {
         String expected = "[act, action, change, demotion, human_action, human_activity, variation]";
         assertThat(actual).isEqualTo(expected);
     }
+
+    @Test
+    public void testLargeActK0() {
+        NgordnetQueryHandler studentHandler = AutograderBuddy.getHyponymsHandler(
+                SMALL_WORDS_FILE, TOTAL_COUNTS_FILE, SYNSETS_FILE_SUBSET, HYPONYMS_FILE_SUBSET);
+        List<String> words = new ArrayList<>();
+        words.add("action");
+
+        NgordnetQuery nq = new NgordnetQuery(words, 1450, 1461, 0);
+        String actual = studentHandler.handle(nq);
+        String expected = "[]";
+        assertThat(actual).isEqualTo(expected);
+
+        words.add("action");
+
+    }
 }

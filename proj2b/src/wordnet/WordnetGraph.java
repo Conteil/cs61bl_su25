@@ -47,11 +47,19 @@ public class WordnetGraph {
     }
 
     public List<Integer> wordIndexs(String word) {
-        return wordToIndexs.get(word);
+        if (wordToIndexs.containsKey(word)) {
+            return wordToIndexs.get(word);
+        } else {
+            return new LinkedList<Integer>();
+        }
     }
 
     public String[] indexWords(int index) {
-        return indexToWords.get(index);
+        if (indexToWords.containsKey(index)) {
+            return indexToWords.get(index);
+        } else {
+            return new String[]{""};
+        }
     }
 
     public ArrayList<String> wordHyponyms(List<String> words) {
@@ -65,6 +73,10 @@ public class WordnetGraph {
             for (int index: wordIndexs(word)) {
                 nodes.add(index);
             }
+            if (nodes.isEmpty()) {
+                return new ArrayList<>();
+            }
+
             nodeSet = wordnet.traversal(nodes);
             wordSet = new HashSet<>();
             for (int node : nodeSet) {
@@ -99,7 +111,7 @@ public class WordnetGraph {
                     wordCount += count;
                 }
                 if (wordCount > 0) {
-                    if (pq.size() <= k) {
+                    if (pq.size() < k) {
                         pq.offer(new WordCountEntry(word, wordCount));
                     } else {
                         Map.Entry<String, Double> min = pq.peek();

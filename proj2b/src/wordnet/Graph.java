@@ -41,4 +41,3 @@ public class Graph {
         return gt.traversal(this, indexs);
     }
 }
-

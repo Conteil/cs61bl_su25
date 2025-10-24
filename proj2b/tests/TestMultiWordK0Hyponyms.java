@@ -84,4 +84,26 @@ public class TestMultiWordK0Hyponyms {
         String expected = "[cake, cookie, kiss, snap, wafer]";
         assertThat(actual).isEqualTo(expected);
     }
+    
+    @Test
+    public void testWordsKN0() {
+        NgordnetQueryHandler studentHandler = AutograderBuddy.getHyponymsHandler(
+                SMALL_WORDS_FILE, TOTAL_COUNTS_FILE, LARGE_SYNSET_FILE, LARGE_HYPONYM_FILE);
+        List<String> words = new ArrayList<>();
+        words.add("pad");
+        words.add("movement");
+        words.add("set");
+        words.add("press");
+        words.add("lead");
+        words.add("effect");
+        words.add("shape");
+        words.add("center");
+        words.add("right");
+
+
+        NgordnetQuery nq = new NgordnetQuery(words, 1920, 1980, 9);
+        String actual = studentHandler.handle(nq);
+        String expected = "[]";
+        assertThat(actual).isEqualTo(expected);
+    }
 }

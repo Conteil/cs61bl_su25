@@ -89,6 +89,9 @@ public class WordnetGraph {
                 hyponymsSet.addAll(wordSet);
             } else {
                 hyponymsSet.retainAll(wordSet);
+                if (hyponymsSet.isEmpty()) {
+                    return new ArrayList<>();
+                }
             }
         }
 
